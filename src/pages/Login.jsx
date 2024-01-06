@@ -80,6 +80,12 @@ const Login = () => {
           >
             register
           </Link>
+          <Link
+            to="/"
+            className="ml-2 link link-hover link-primary capitalize"
+          >
+            home
+          </Link>
         </p>
       </Form>
     </section>
