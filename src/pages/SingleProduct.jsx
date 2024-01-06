@@ -2,14 +2,16 @@ import React, { useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import { formatPrice, customFetch, generateAmountOptions } from "../utils";
 import { Link } from "react-router-dom";
-import { useDispatch } from 'react-redux';
-import { addItem } from '../features/cart/cartSlice';
+import { useDispatch } from "react-redux";
+import { addItem } from "../features/cart/cartSlice";
 
-export const loader = async ({ params }) => {
-  const response = await customFetch(`/products/${params.id}`);
-  console.log(response.data.data);
-  return { product: response.data.data };
-};
+export const loader =
+  (queryClient) =>
+  async ({ params }) => {
+    const response = await customFetch(`/products/${params.id}`);
+    console.log(response.data.data);
+    return { product: response.data.data };
+  };
 
 const SingleProduct = () => {
   const { product } = useLoaderData();
@@ -110,10 +112,7 @@ const SingleProduct = () => {
           </div>
           {/* CART BUTTON */}
           <div className="mt-10 ">
-            <button
-              className="btn btn-secondary btn-md"
-              onClick={addToCart}
-            >
+            <button className="btn btn-secondary btn-md" onClick={addToCart}>
               Add to bag
             </button>
           </div>
