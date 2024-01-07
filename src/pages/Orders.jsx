@@ -9,8 +9,25 @@ import {
   PaginationContainer,
 } from "../components";
 
+const ordersQuery = (params, user) => {
+  return {
+    queryKey: [
+      "orders",
+      user.username,
+      params.page ? parseInt(params.page) : 1,
+    ],
+    queryFn: () =>
+      customFetch.get("/orders", {
+        params,
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      }),
+  };
+};
+
 export const loader =
-  (store) =>
+  (store,queryClient) =>
   async ({ request }) => {
     const user = store.getState().userState.user;
 
@@ -23,13 +40,10 @@ export const loader =
     ]);
 
     try {
-     const response = await customFetch.get('/orders', {
-        params,
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
-      console.log(response);
+      const response = await queryClient.ensureQueryData(
+        ordersQuery(params, user)
+      );
+
       return { orders: response.data.data, meta: response.data.meta };
     } catch (error) {
       console.log(error);
@@ -52,7 +66,7 @@ const Orders = () => {
       {" "}
       <SectionTitle text="Your Orders" />
       <OrdersList />
-      <PaginationContainer/>
+      <PaginationContainer />
       <ComplexPaginationContainer />
     </Fragment>
   );
